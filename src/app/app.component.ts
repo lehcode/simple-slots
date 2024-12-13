@@ -1,13 +1,21 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core'
+
+import { SettingsFormComponent } from './forms/settings-form.component'
+import { SettingsValidatorService } from './services/settings-validator.service'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [SettingsFormComponent],
+  providers: [SettingsValidatorService],
+  template: `
+    <div class="min-h-screen bg-gray-50">
+      <h1 class="mb-6">Game Settings</h1>
+      <app-settings-form></app-settings-form>
+    </div>
+  `,
+  styles: ``,
 })
 export class AppComponent {
-  title = 'slots-game';
+  title = 'slots-game'
 }
