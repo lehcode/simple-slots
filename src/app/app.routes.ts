@@ -3,8 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/game',
-    pathMatch: 'full'
+    loadComponent: () => import('./pages/home/home.page'),
   },
   {
     path: 'game',
@@ -13,5 +12,9 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('./routes/settings.routes').then((m) => m.SETTINGS_ROUTES)
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./components/not-found/not-found.component').then(m => m.NotFoundComponent)
   }
 ];

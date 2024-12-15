@@ -1,8 +1,10 @@
 import { Routes } from "@angular/router";
 
+// import { SettingsPage } from "../pages/settings/settings.page";
+
 export const SETTINGS_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('../components/settings.component').then((m) => m.SettingsComponent)
+    loadComponent: () => import('../pages/settings/settings.page').then((m) => m.SettingsPage)
   }
 ]
