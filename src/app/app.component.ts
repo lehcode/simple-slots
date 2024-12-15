@@ -1,20 +1,14 @@
-import { Component } from '@angular/core'
-
-import { SettingsFormComponent } from './forms/settings-form.component'
-import { SettingsValidatorService } from './services/settings-validator.service'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { RouterOutlet } from '@angular/router'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [SettingsFormComponent],
-  providers: [SettingsValidatorService],
-  template: `
-    <div class="min-h-screen bg-gray-50">
-      <h1 class="mb-6">Game Settings</h1>
-      <app-settings-form></app-settings-form>
-    </div>
-  `,
+  imports: [RouterOutlet],
+  providers: [],
+  template: `<router-outlet />`,
   styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = 'slots-game'
