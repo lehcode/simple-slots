@@ -19,8 +19,8 @@ export const settingsFormSchema: IFormField[] = [
     error: 'Frequency is required',
     validators: {
       required: Validators.required,
-      min: Validators.min(10),
-      max: Validators.max(50),
+      min: Validators.min(1),
+      max: Validators.max(10),
     },
   },
   {
@@ -30,7 +30,7 @@ export const settingsFormSchema: IFormField[] = [
     validators: {
       required: Validators.required,
       min: Validators.min(10),
-      max: Validators.max(50),
+      max: Validators.max(100),
     },
   },
   {
@@ -40,7 +40,7 @@ export const settingsFormSchema: IFormField[] = [
     validators: {
       required: Validators.required,
       min: Validators.min(10),
-      max: Validators.max(50),
+      max: Validators.max(100),
     },
   },
 ]

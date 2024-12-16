@@ -12,7 +12,7 @@ import { GameStateService } from '../../services/game-state.service'
   imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-      <header class="p-4 flex justify-between items-center bg-gray-800/50 border-b border-gray-700">
+    <header class="flex-none h-16 flex justify-between items-center bg-gray-800/50 border-b border-gray-700 px-4">
         <div class="flex items-center gap-8">
           <div class="bg-gray-700 rounded-lg px-4 py-2">
             <span class="text-gray-400">Score:</span>
