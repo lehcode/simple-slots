@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common'
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs'
 
 import { IFormField } from '../../interfaces/form-field.interface'
@@ -13,29 +13,25 @@ import { settingsFormSchema } from './settings-form.schema'
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: `
-    <form [formGroup]="settingsForm" class="p-6 bg-gray-50 rounded-lg shadow-sm">
+    <form [formGroup]="form" class="p-6 bg-gray-50 rounded-lg shadow-sm">
       <div class="space-y-6">
-        @for (field of formFields; track field.name) {
+        @for (control of formFields; track control.name) {
           <div class="form-group">
-            <label [for]="field.name" class="block text-sm font-medium text-gray-700 mb-1">
-              {{ field.label }}
+            <label [for]="control.name" class="block text-sm font-medium text-gray-700 mb-1">
+              {{ control.label }}
             </label>
             <input
-              [id]="field.name"
+              [id]="control.name"
               type="number"
-              [formControlName]="field.name"
+              [formControlName]="control.name"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm disabled:bg-gray-100"
-              [ngClass]="{ 'border-red-300 focus:border-red-500 focus:ring-red-500': isFieldInvalid(field.name) }"
+              [class.border-red-300]="!isValid(control.name)"
+              [class.focus:border-red-500]="!isValid(control.name)"
+              [class.focus:ring-red-500]="!isValid(control.name)"
             />
-            @if (isFieldInvalid(field.name)) {
+            @if (!isValid(control.name)) {
               <p class="mt-1 text-sm text-red-600">
-                @if (getFieldErrors(field.name)?.['required']) {
-                  {{ field.error }}
-                } @else if (getFieldErrors(field.name)?.['min']) {
-                  Value must be at least {{ field.validators[1].min }}
-                } @else if (getFieldErrors(field.name)?.['max']) {
-                  Value must be at most {{ field.validators[2].max }}
-                }
+                {{ getErrorMessage(control) }}
               </p>
             }
           </div>
@@ -46,58 +42,70 @@ import { settingsFormSchema } from './settings-form.schema'
   styles: ``,
 })
 export class SettingsFormComponent implements OnInit, OnDestroy {
-  protected readonly settingsForm: FormGroup
-  protected readonly formFields: IFormField[]
+  protected form!: FormGroup
+  protected formFields: IFormField[] = settingsFormSchema
   private destroy$ = new Subject<void>()
 
   constructor(
     private fb: FormBuilder,
     private gameStateService: GameStateService,
   ) {
-    this.formFields = settingsFormSchema
-    this.settingsForm = this.createForm()
+    this.createForm()
   }
 
   ngOnInit(): void {
     // Initial settings
-    this.gameStateService.settings$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((settings) => {
-        this.settingsForm.patchValue(settings, { emitEvent: false })
-      })
+    this.gameStateService.settings$.pipe(takeUntil(this.destroy$)).subscribe((settings) => {
+      this.form.patchValue(settings, { emitEvent: false })
+    })
     // Subscribe to changes
-    this.settingsForm.valueChanges
+    this.form.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
       )
       .subscribe((values) => {
-        if (this.settingsForm.valid) {
+        if (this.form.valid) {
           this.gameStateService.updateSettings(values)
         }
       })
   }
 
-  private createForm(): FormGroup {
-    const fields: Record<string, unknown>[] = []
+  /**
+   * Creates a form group based on the form fields specified in the form fields schema.
+   *
+   * The form group is created using the `FormBuilder.group` method and is populated
+   * with the form fields from the schema. The validators for each field are extracted
+   * from the field's `validators` property and passed as the second argument to
+   * `FormBuilder.group`.
+   *
+   * @returns A form group that represents the form fields specified in the schema.
+   */
+  private createForm() {
+    const group: Record<string, unknown> = {}
 
-    this.formFields.forEach((field: IFormField) => {
-      // Iterate over fields JSON
-      fields.push({ [field.name]: ['', field.validators] })
+    this.formFields.forEach((field) => {
+      const validators = Object.values(field.validators)
+      group[field.name] = ['', validators]
     })
 
-    return this.fb.group(fields)
+    this.form = this.fb.group(group)
   }
 
   /**
    * Checks whether a form field is valid.
    *
    * @param fieldName - The name of the form field to validate.
-   * @returns `true` if the field is invalid and either dirty or touched, otherwise `false`.
+   * @returns `true` if the field is invalid, dirty, or touched, otherwise `false`.
    */
   isValid(fieldName: string): boolean {
-    const f = this.settingsForm.get(fieldName) as FormControl<IFormField>
-    return !f || (f.invalid && (f.dirty || f.touched))
+    const control = this.form.get(fieldName)
+
+    if (!control) {
+      throw new Error(`Control '${fieldName}' not found`)
+    }
+
+    return control.invalid || control.dirty || control.touched ? false : true
   }
 
   /**
@@ -109,5 +117,33 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next()
     this.destroy$.complete()
+  }
+
+  protected getErrorMessage(field: IFormField): string {
+    const control = this.form.get(field.name)
+
+    if (!control) {
+      throw new Error(`Control '${field.name}' not found`)
+    }
+
+    if (control.hasError('required')) {
+      return field.error
+    }
+
+    // const minValidator: ValidatorFn;
+    // const maxValidator: ValidatorFn;
+
+    if (control.hasError('min')) {
+      const minValidator = field.validators['min']
+      const minValue = (minValidator as any).min
+      return `Value must be at least ${minValue}`
+    }
+    if (control.hasError('max')) {
+      const maxValidator = field.validators['max']
+      const maxValue = (maxValidator as any).max
+      return `Value must be at most ${maxValue}`
+    }
+
+    return ''
   }
 }

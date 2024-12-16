@@ -1,9 +1,9 @@
-import { Validators } from "@angular/forms";
+import { ValidatorFn } from "@angular/forms";
 
 export interface IFormField {
   name: string;
   label: string;
   error: string;
-  validators: Validators[],
+  validators: Partial<Record<string, ValidatorFn>>;
   [key: string]: unknown;
 }
