@@ -54,10 +54,10 @@ package "Services" {
 
     class PseudoWebSocketService {
         -connection$: BehaviorSubject<boolean>
-        -gameUpdates$: Subject<GameUpdate>
+        -gameUpdates$: Subject<IGameUpdate>
         +connect()
         +disconnect()
-        +sendUpdate(update: GameUpdate)
+        +sendUpdate(update: IGameUpdate)
         -simulateLatency()
     }
 
