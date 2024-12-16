@@ -37,17 +37,18 @@ import { GameStateService } from '../../services/game-state.service'
       <div class="relative w-full h-[calc(100vh-4rem)] overflow-hidden">
         <ng-container *ngFor="let drop of rain$ | async">
           <div
-            class="absolute w-4 h-4 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50"
+            class="absolute w-4 h-4 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50 transition-all duration-16"
             [style.left.%]="drop.x"
             [style.top.%]="drop.y"
+            [style.transform]="'translate(-50%, -50%) scale(' + getDropScale(drop.y) + ')'"
           ></div>
         </ng-container>
 
         <!-- Player -->
         <div
-          class="absolute bottom-8 w-20 h-6 bg-blue-500 rounded-md transition-transform duration-100 shadow-lg shadow-blue-500/50"
+          class="absolute bottom-8 w-20 h-6 bg-blue-100 rounded-md transition-transform duration-[50ms] ease-linear shadow-lg shadow-blue-500/50"
           [style.left.%]="playerPosition$ | async"
-          [style.transform]="'translateX(-50%)'"
+          [style.transform]="'translateX(-50%) ' + getPlayerAnimation()"
         ></div>
       </div>
 
@@ -131,5 +132,15 @@ export class GameComponent implements OnInit, OnDestroy {
   goToSettings(): void {
     this.stopGame()
     this.router.navigate(['/settings'])
+  }
+  
+  getDropScale(y: number): number {
+    // Scale from 0.8 to 1.2 based on y position
+    return 0.8 + (y / 100) * 0.4;
+  }
+
+  getPlayerAnimation(): string {
+    // Add slight squish effect when moving
+    return 'scaleY(0.95) scaleX(1.05)';
   }
 }
