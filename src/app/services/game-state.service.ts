@@ -18,7 +18,7 @@ const INITIAL_STATE: IGameState = {
   isPlaying: false,
   score: 0,
   timeRemaining: 0,
-  playerPosition: 50,
+  playerPosition: 50, // Center
   objects: [],
 }
 
@@ -38,17 +38,19 @@ export class GameStateService {
   readonly score = computed(() => this.gameState().score)
   readonly objects = computed(() => this.gameState().objects)
 
-  // Observables
+  // Observables for external subscriptions
+  readonly playerPosition$ = toObservable(this.playerPosition);
   readonly settings$ = toObservable(this.settings)
   readonly gameState$ = toObservable(this.gameState)
   readonly gameOver$ = this.gameOver.asObservable()
 
   constructor(private webSocketService: PseudoWebsocketService) {
-    // this.setupGameStateUpdates();
+    this.setupGameStateUpdates();
   }
 
   private setupGameStateUpdates(): void {
-    //
+    // Handle keyboard controls
+    // Set up game timer when game is playing
   }
 
   public updateSettings(newSettings: Partial<IGameSettings>): boolean {
@@ -63,5 +65,39 @@ export class GameStateService {
     }
 
     return true;
+  }
+
+  startGame(): void {
+    this.gameState.update((current) => {
+      return {
+        ...current,
+        isPlaying: true,
+        timeRemaining: this.settings().gameTime,
+        score: 0,
+        objects: [],
+      }
+    })
+  }
+
+  stopGame(): void {
+    this.gameState.update((current) => {
+      return {
+        ...current,
+        isPlaying: false,
+        timeRemaining: 0,
+        score: 0,
+        objects: [],
+      }
+    })
+    this.gameOver.next();
+    // this.webSocketService.disconnect()
+  }
+
+  /**
+   * Restart the game by stopping the current game and starting a new one.
+   */
+  restartGame(): void {
+    this.stopGame();
+    this.startGame();
   }
 }
