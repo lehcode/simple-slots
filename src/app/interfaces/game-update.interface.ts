@@ -1,4 +1,5 @@
-export interface GameUpdate {
-  caughtObjects: number;
-  timeRemaining: number;
+export interface IGameUpdate {
+  score: number
+  timeRemaining: number
+  timestamp?: string
 }
