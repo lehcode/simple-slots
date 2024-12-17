@@ -1,3 +1,11 @@
 name = "simple-slots"
 compatibility_date = "2024-11-24"
 pages_build_output_dir = "dist/simple-slots"
+
+[vars]
+NODE_ENV = "development"
+NODE_VERSION = "20.x"
+
+[env.production.vars]
+NODE_ENV = "production"
+NODE_VERSION = "20.x"
