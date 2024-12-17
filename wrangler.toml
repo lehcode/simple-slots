@@ -1,0 +1,3 @@
+name = "simple-slots"
+compatibility_date = "2024-11-24"
+pages_build_output_dir = "dist/simple-slots"
