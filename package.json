@@ -20,6 +20,7 @@
     "@angular/router": "^18.2.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.15",
+    "nx": "20.2.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
@@ -51,7 +52,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "nx": "20.2.2",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
     "prettier-eslint": "^16.3.0",
