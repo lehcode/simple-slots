@@ -1,31 +1,110 @@
-# SlotsGame
+# Slots Game
 
-Simple slots game
+A simple browser-based mini-game built with Angular where players control a character to catch falling objects. The game features configurable settings, real-time score tracking, and simulated WebSocket updates.
 
-## Implementation diagram
+![Implementation diagram](doc/diagram.jpg)
 
-Please see [./doc/diagram.puml](diagram)
+## Features
 
-## Components
+- Real-time gameplay with keyboard controls
+- Configurable game settings:
+  - Falling speed of objects
+  - Frequency of object spawning
+  - Player movement speed
+  - Game duration
+- Live score tracking
+- Pseudo-WebSocket implementation for game state updates
+- Responsive design with TailwindCSS
 
-## Development server
+## Prerequisites
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Node.js (v18 or higher)
+- Yarn package manager
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. Clone the repository:
 
-## Build
+```bash
+git clone https://github.com/lehcode/simple-slots.git
+cd slots-game
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Install dependencies:
 
-## Running unit tests
+```bash
+yarn install
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Running the Application
 
-## Running end-to-end tests
+1. Start the development server:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+yarn start
+```
 
+2. Open your browser and navigate to `http://localhost:4200`
 
+## Game Instructions
+
+1. Configure game settings in the Settings page:
+   - Falling Speed (10-50): Controls how fast objects fall
+   - Falling Frequency (10-50): Controls how often new objects appear
+   - Player Speed (10-50): Controls how fast the player can move
+   - Game Time (10-50): Sets the game duration in seconds
+
+2. Start the game:
+   - Use left and right arrow keys to move the player
+   - Catch falling objects to score points
+   - Game ends when the timer runs out
+
+## Technical Implementation
+
+### Key Components
+
+- **GameStateService**: Manages the core game logic and state
+- **PseudoWebSocketService**: Simulates WebSocket connection for state updates
+- **SettingsFormComponent**: Handles game configuration using reactive forms
+- **GameComponent**: Main game UI and player controls
+
+### Technologies Used
+
+- Angular 18
+- RxJS for reactive programming
+- TailwindCSS for styling
+- TypeScript for type safety
+
+### Performance Optimizations
+
+1. OnPush change detection strategy
+2. Reactive forms for efficient form handling
+3. RxJS operators for optimized data flow
+4. Signal-based state management
+5. RequestAnimationFrame for smooth animations
+
+## Development Notes
+
+- Uses strict TypeScript compilation
+- Implements reactive programming patterns
+- Follows Angular best practices and style guide
+- Includes comprehensive type definitions
+- Uses signals for efficient state management
+
+## Building for Production
+
+```bash
+yarn build
+```
+
+The build artifacts will be stored in the `dist/` directory.
+
+## Running Tests
+
+```bash
+yarn test
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
