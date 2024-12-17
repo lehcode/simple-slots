@@ -9,7 +9,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:application",
       "options": {
-        "outputPath": "dist/slots-game",
+        "outputPath": "dist/simple-slots",
         "index": "src/index.html",
         "browser": "src/main.ts",
         "polyfills": [
